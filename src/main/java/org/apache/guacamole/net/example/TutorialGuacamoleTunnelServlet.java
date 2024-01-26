@@ -25,7 +25,7 @@ public class TutorialGuacamoleTunnelServlet
         config.setParameter("password", "headless");
         // Connect to guacd - everything is hard-coded here.
         GuacamoleSocket socket = new ConfiguredGuacamoleSocket(
-                new InetGuacamoleSocket("localhost", 4822),
+                new InetGuacamoleSocket("localhost",4822),
                 config
         );
 
