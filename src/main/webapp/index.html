@@ -35,16 +35,43 @@
     </div>
     <div id="div1" class="center">
         <a href="vnc.html">
-            <button>
-                GO
+            <button value="1" class="imageButton">
+                1
+            </button>
+        </a>
+        <a href="vnc.html">
+            <button value="2" class="imageButton">
+                2
+            </button>
+        </a>
+        <a href="vnc.html">
+            <button value="3" class="imageButton">
+                3
+            </button>
+        </a>
+        <a href="vnc.html">
+            <button value="4" class="imageButton">
+                4
             </button>
         </a>
     </div>
     <script type="text/javascript">
         var users = document.getElementById("users");
         users.onclick = function(x){
-            localStorage.setItem('user', x.target.value);
+            sessionStorage.setItem('user', x.target.value);
             console.log(x.target.value);
+        }
+        window.onload = function(){
+            var buttons = document.getElementsByClassName('imageButton');
+            for (var i = 0; i < buttons.length; i++){
+                buttons[i].onclick = function(x){
+                    sessionStorage.setItem('image', x.target.value);
+                }
+            }
+            var links = document.getElementsByTagName('a');
+            for (var i = 0; i < links.length; i++){
+                links[i].setAttribute('href', '');
+            }
         }
     </script>
 </body>
