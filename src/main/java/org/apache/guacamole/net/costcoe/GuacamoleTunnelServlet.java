@@ -19,12 +19,6 @@
 
 package org.apache.guacamole.net.costcoe;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-
 import javax.servlet.http.HttpServletRequest;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.GuacamoleSocket;
@@ -35,27 +29,21 @@ import org.apache.guacamole.protocol.ConfiguredGuacamoleSocket;
 import org.apache.guacamole.protocol.GuacamoleConfiguration;
 import org.apache.guacamole.servlet.GuacamoleHTTPTunnelServlet;
 
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
+//import com.jcraft.jsch.ChannelExec;
+//import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+//import com.jcraft.jsch.Session;
 import java.util.Arrays;
-
 
 /**
  * Simple tunnel example with hard-coded configuration parameters.
  */
-public class DummyGuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
-    
-    private static final long serialVersionUID = 1L;
-    private static Session sharedSession; // Shared SSH session
-    private static int usersCount = 0;    // Number of users using the shared session
-
+public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
 
     @Override
     protected GuacamoleTunnel doConnect(HttpServletRequest request) throws GuacamoleException{
 
         // guacd connection information
-
         String hostname = "172.17.0.2";
         int port = 4822;
         String userNumber = request.getParameter("userNumber");
@@ -64,42 +52,17 @@ public class DummyGuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         String host = "192.168.56.105";
         String userCMD = "vboxuser";
         String password = "costcoe";
-        
 
-        synchronized (DummyGuacamoleTunnelServlet.class) {
-            try {
-                // If no shared session exists or the session is not connected, create one
-                if (sharedSession == null || !sharedSession.isConnected()) {
-                    JSch jsch = new JSch();
-                    sharedSession = jsch.getSession(userCMD, host, 22);
-                    sharedSession.setPassword(password);
-                    sharedSession.setConfig("StrictHostKeyChecking", "no");
-                    sharedSession.connect();
-                }
-
-                // Increment the count of users
-                usersCount++;
-
-                // Execute commands or perform SSH actions
-                System.out.println(Arrays.toString(executeCommand(sharedSession, "echo dsfgjsf hgsdfj fgdjk sf && echo end")));
-                // Create task for image selected by user
-                // Get and store IP address of container
-                // Get ID of container, associate and store with user data in seperate database
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                // Decrement the count of users
-                usersCount--;
-
-                // If the last user, close the shared session
-                if (usersCount == 0 && sharedSession != null && sharedSession.isConnected()) {
-                    sharedSession.disconnect();
-                    sharedSession = null; // Reset sharedSession
-                }
-            }
+        try {
+            SSHInterface ssh = new SSHInterface(userCMD, host, password);
+            System.out.println(Arrays.toString(ssh.execute("echo testing")));
+            ssh.disconnect();
+        } catch (JSchException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    
 
         String vncIp;
         switch (user) {
@@ -143,32 +106,4 @@ public class DummyGuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
     // in the future, this method could just stop the docker container, 
     // and then it could be started again for the user later
 
-    public String[] executeCommand(Session session, String command) throws Exception {
-        ChannelExec channel = (ChannelExec) session.openChannel("exec");
-        channel.setCommand(command);
-
-        // Get input stream to read the command's output
-        InputStream inputStream = channel.getInputStream();
-
-        channel.connect();
-
-        // Read the command's output
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        ArrayList<String> outputList = new ArrayList<String>();
-
-        while ((line = reader.readLine()) != null) {
-            outputList.add(line);
-        }
-        // Close resources
-        reader.close();
-        inputStream.close();
-
-        channel.disconnect();
-
-        String[] output = new String[outputList.size()];
-        outputList.toArray(output);
-
-        return output;
-    }
 }

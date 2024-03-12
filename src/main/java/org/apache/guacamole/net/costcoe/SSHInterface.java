@@ -1,6 +1,5 @@
 package org.apache.guacamole.net.costcoe;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import com.jcraft.jsch.JSch;
@@ -69,8 +68,8 @@ public class SSHInterface {
         this.session.disconnect();
     }
 
-    public String[] executeCommand(Session session, String command) throws Exception {
-        ChannelExec channel = (ChannelExec) session.openChannel("exec");
+    public String[] execute(String command) throws Exception { // deal with exception handling later
+        ChannelExec channel = (ChannelExec) this.session.openChannel("exec");
         channel.setCommand(command);
 
         // Get input stream to read the command's output
