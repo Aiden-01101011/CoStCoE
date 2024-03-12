@@ -34,12 +34,22 @@
     <servlet>
         <description>Tunnel servlet.</description>
         <servlet-name>Tunnel</servlet-name>
-        <servlet-class>org.apache.guacamole.net.example.DummyGuacamoleTunnelServlet</servlet-class>
+        <servlet-class>org.apache.guacamole.net.costcoe.DummyGuacamoleTunnelServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Tunnel</servlet-name>
         <url-pattern>/tunnel</url-pattern>
     </servlet-mapping>
+    <!-- <servlet>
+        <description>Websocket servlet.</description>
+        <servlet-name>Websocket</servlet-name>
+        <servlet-class>org.apache.tomcat.websocket.server.WebSocketEndpoint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Websocket</servlet-name>
+        <url-pattern>/ws</url-pattern>
+    </servlet-mapping> -->
+
 
 
 </web-app>

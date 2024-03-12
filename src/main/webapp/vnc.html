@@ -35,7 +35,9 @@
 
         <!-- Init -->
         <script type="text/javascript"> /* <![CDATA[ */
-
+            
+            // Connect to websocket
+            var ws = new WebSocket("ws://localhost:8080/guacamole-example-1.5.3/ws");
             // Get display div from document
             var display = document.getElementById("display");
 
@@ -58,12 +60,11 @@
             let USER = localStorage.getItem('user');
             // Connect
             guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&userNumber=${USER}`);
-
             window.onresize = function () {
-                let GUAC_WIDTH  = Math.round(display.clientWidth);
-                let GUAC_HEIGHT = Math.round(display.clientHeight);
+                let GUAC_WIDTH  = 720;//Math.round(display.clientWidth);
+                let GUAC_HEIGHT = 720;//Math.round(display.clientHeight);
                 //---- Resize RDP window by sendMessage to the Server Guacamole
-                tunnel.sendMessage('size', GUAC_WIDTH, GUAC_HEIGHT);
+                guac.sendSize(GUAC_WIDTH, GUAC_HEIGHT);
             }
 
 
@@ -89,6 +90,20 @@
 
             keyboard.onkeyup = function (keysym) {
                 guac.sendKeyEvent(0, keysym);
+            };
+
+            // Handling websocket
+
+            ws.onopen = function(event) {
+                console.log("WebSocket connection opened.");
+            };
+
+            ws.onmessage = function(event) {
+                console.log("Received message: " + event.data);
+            };
+
+            ws.onclose = function(event) {
+                console.log("WebSocket connection closed.");
             };
 
         /* ]]> */ </script>
