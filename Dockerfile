@@ -5,6 +5,8 @@ LABEL maintainer=”me”
 
 ADD target/guacamole-example-1.5.3.war /usr/local/tomcat/webapps/
 
+ADD setenv.sh /usr/local/tomcat/bin
+
 EXPOSE 8080
 
 CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]

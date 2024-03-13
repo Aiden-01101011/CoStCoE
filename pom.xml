@@ -23,12 +23,12 @@
                         http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.guacamole</groupId>
-    <artifactId>guacamole-example</artifactId>
+    <groupId>com.github.costcoe</groupId>
+    <artifactId>CoStCoE</artifactId>
     <packaging>war</packaging>
-    <version>1.5.3</version>
-    <name>guacamole-example</name>
-    <url>http://guacamole.apache.org/</url>
+    <version>0.1</version>
+    <name>CoStCoE</name>
+    <url>https://github.com/CoStCoE</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

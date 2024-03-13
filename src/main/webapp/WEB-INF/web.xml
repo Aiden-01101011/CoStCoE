@@ -34,7 +34,7 @@
     <servlet>
         <description>Tunnel servlet.</description>
         <servlet-name>Tunnel</servlet-name>
-        <servlet-class>org.apache.guacamole.net.costcoe.GuacamoleTunnelServlet</servlet-class>
+        <servlet-class>com.github.costcoe.costcoe.web.GuacamoleTunnelServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Tunnel</servlet-name>

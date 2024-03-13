@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.guacamole.net.costcoe;
+package com.github.costcoe.costcoe.web;
 
 import javax.servlet.http.HttpServletRequest;
 import org.apache.guacamole.GuacamoleException;
@@ -31,7 +31,7 @@ import org.apache.guacamole.servlet.GuacamoleHTTPTunnelServlet;
 
 //import com.jcraft.jsch.ChannelExec;
 //import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
+
 //import com.jcraft.jsch.Session;
 import java.util.Arrays;
 
@@ -53,16 +53,9 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         String userCMD = "vboxuser";
         String password = "costcoe";
 
-        try {
-            SSHInterface ssh = new SSHInterface(userCMD, host, password);
-            System.out.println(Arrays.toString(ssh.execute("echo testing")));
-            ssh.disconnect();
-        } catch (JSchException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SSHInterface ssh = new SSHInterface(userCMD, host, password);
+        System.out.println(Arrays.toString(ssh.execute("echo testing")));
+        ssh.disconnect();
 
         String vncIp;
         switch (user) {
@@ -100,10 +93,5 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
 
 
     }
-    // create doPost method that gets ID of container from database based on user data
-    // and uses that ID to kill the docker swarm task that was running that container
-
-    // in the future, this method could just stop the docker container, 
-    // and then it could be started again for the user later
 
 }

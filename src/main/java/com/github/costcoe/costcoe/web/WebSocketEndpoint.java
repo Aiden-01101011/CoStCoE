@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.tomcat.websocket.server;
+package com.github.costcoe.costcoe.web;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,9 +31,6 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import org.apache.guacamole.net.costcoe.SSHInterface;
-
-import com.jcraft.jsch.JSchException;
 
 @ServerEndpoint("/ws")
 public class WebSocketEndpoint extends Endpoint {
@@ -55,16 +52,10 @@ public class WebSocketEndpoint extends Endpoint {
         String userCMD = "vboxuser";
         String password = "costcoe";
 
-        try {
-            SSHInterface ssh = new SSHInterface(userCMD, host, password);
-            System.out.println(Arrays.toString(ssh.execute("echo testing")));
-            ssh.disconnect();
-        } catch (JSchException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        SSHInterface ssh = new SSHInterface(userCMD, host, password);
+        System.out.println(Arrays.toString(ssh.execute("echo testing")));
+        ssh.disconnect();
         
         timer.cancel();
     }
