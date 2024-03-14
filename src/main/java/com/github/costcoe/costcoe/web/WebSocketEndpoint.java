@@ -46,18 +46,17 @@ public class WebSocketEndpoint extends Endpoint {
     @Override
     public void onClose(Session session, CloseReason closeReason) {
         // Cancel the timer when the session is closed
+        timer.cancel();
         System.out.println("Client not responding. Performing actions...");
 
-        String host = "192.168.56.105";
-        String userCMD = "vboxuser";
-        String password = "costcoe";
+        String SSH_HOST = System.getenv("SSH_HOST");
+        String SSH_USER = System.getenv("SSH_USER");
+        String SSH_PASSWORD = System.getenv("SSH_PASSWORD");
 
 
-        SSHInterface ssh = new SSHInterface(userCMD, host, password);
+        SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
         System.out.println(Arrays.toString(ssh.execute("echo testing")));
         ssh.disconnect();
-        
-        timer.cancel();
     }
 
     private static class CheckClientActivity extends TimerTask {
@@ -75,8 +74,8 @@ public class WebSocketEndpoint extends Endpoint {
                 System.out.println("Sending ping!");
                 session.getBasicRemote().sendPing(ByteBuffer.wrap("Ping".getBytes()));
             } catch (IOException e) {
-                // Client is not responsive, perform necessary actions
-                // Close containers
+                System.err.println("Ping failed to send!");
+                e.printStackTrace();
             }
         }
     }

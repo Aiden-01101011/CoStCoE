@@ -37,7 +37,7 @@
         <script type="text/javascript"> /* <![CDATA[ */
             
             // Connect to websocket
-            var ws = new WebSocket("ws://localhost:8080/guacamole-example-1.5.3/ws");
+            var ws = new WebSocket("ws://localhost:8080/CoStCoE-0.1/ws"); //ws://localhost:8080/guacamole-example-1.5.3/ws
             // Get display div from document
             var display = document.getElementById("display");
 
@@ -57,9 +57,10 @@
             };
 
             // Load user data
-            let USER = localStorage.getItem('user');
+            let USER = sessionStorage.getItem('user');
+            let IMAGE = sessionStorage.getItem('image');
             // Connect
-            guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&userNumber=${USER}`);
+            guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&USERNUM=${USER}&IMAGE=${IMAGE}`);
             window.onresize = function () {
                 let GUAC_WIDTH  = 720;//Math.round(display.clientWidth);
                 let GUAC_HEIGHT = 720;//Math.round(display.clientHeight);

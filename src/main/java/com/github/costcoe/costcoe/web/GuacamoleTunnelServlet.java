@@ -44,16 +44,17 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
     protected GuacamoleTunnel doConnect(HttpServletRequest request) throws GuacamoleException{
 
         // guacd connection information
-        String hostname = "172.17.0.2";
-        int port = 4822;
-        String userNumber = request.getParameter("userNumber");
-        int user = Integer.parseInt(userNumber);
-        // SSH connection info
-        String host = "192.168.56.105";
-        String userCMD = "vboxuser";
-        String password = "costcoe";
+        String hostname = System.getenv("GUACD_HOST");
+        int port = Integer.parseInt(System.getenv("GUACD_PORT"));
+        // Data from JS
+        int user = Integer.parseInt(request.getParameter("USERNUM"));
+        //int image = Integer.parseInt(request.getParameter("IMAGE"));
+        // SSH connection information
+        String SSH_HOST = System.getenv("SSH_HOST");
+        String SSH_USER = System.getenv("SSH_USER");
+        String SSH_PASSWORD = System.getenv("SSH_PASSWORD");
 
-        SSHInterface ssh = new SSHInterface(userCMD, host, password);
+        SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
         System.out.println(Arrays.toString(ssh.execute("echo testing")));
         ssh.disconnect();
 
@@ -64,7 +65,7 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
                 break;
 
             case 2:
-                vncIp = "172.17.0.4";
+                vncIp = "172.17.0.5";
                 break;
         
             default:

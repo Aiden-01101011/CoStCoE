@@ -3,7 +3,7 @@ FROM tomcat:9.0
 
 LABEL maintainer=”me”
 
-ADD target/guacamole-example-1.5.3.war /usr/local/tomcat/webapps/
+ADD target/*.war /usr/local/tomcat/webapps/
 
 ADD setenv.sh /usr/local/tomcat/bin
 
