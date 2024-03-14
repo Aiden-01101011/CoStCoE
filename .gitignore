@@ -1,5 +1,4 @@
 .vscode/
-src/main/webapp/META-INF/
 target/
 *~
 setenv.sh

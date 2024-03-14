@@ -11,6 +11,8 @@
 
 export START_PORT=34000 # First port for vnc containers, increments by one for each user
 
+export CSV_FILE_PATH=src/main/rescources/SessionData.csv
+
 # SSH user info
 export SSH_USER=
 export SSH_PASSWORD=

@@ -41,6 +41,8 @@ public class WebSocketEndpoint extends Endpoint {
         // Register a periodic task to check client activity
         timer = new Timer();
         timer.scheduleAtFixedRate(new CheckClientActivity(session), 0, 5000); // Check every 5 seconds
+        CSVManager.addSession("testid", "testnode", "testport");
+        System.out.println(CSVManager.getNodeIp("testid"));
     }
 
     @Override
@@ -48,6 +50,8 @@ public class WebSocketEndpoint extends Endpoint {
         // Cancel the timer when the session is closed
         timer.cancel();
         System.out.println("Client not responding. Performing actions...");
+
+        CSVManager.deleteSessionEntry("testid");
 
         String SSH_HOST = System.getenv("SSH_HOST");
         String SSH_USER = System.getenv("SSH_USER");

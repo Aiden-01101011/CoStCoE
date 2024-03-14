@@ -45,7 +45,7 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
 
         // guacd connection information
         String hostname = System.getenv("GUACD_HOST");
-        int port = Integer.parseInt(System.getenv("GUACD_PORT"));
+        int GUACD_PORT = Integer.parseInt(System.getenv("GUACD_PORT"));
         // Data from JS
         int user = Integer.parseInt(request.getParameter("USERNUM"));
         //int image = Integer.parseInt(request.getParameter("IMAGE"));
@@ -55,7 +55,12 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         String SSH_PASSWORD = System.getenv("SSH_PASSWORD");
 
         SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
-        System.out.println(Arrays.toString(ssh.execute("echo testing")));
+        String name = "";
+        int port = 34000;
+        // String[] response = ssh.execute(String.format("sudo docker service create --name %s --port %d:5901 b3c0056806ac", name, port)).clone();
+        // response = ssh.execute(String.format("sudo docker service ps --format '{{.Node}}' %s", response[0])).clone();
+        // System.out.println(response[0]);
+        //System.out.println(Arrays.toString(ssh.execute("echo testing")));
         ssh.disconnect();
 
         String vncIp;
@@ -84,7 +89,7 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
 
         // Connect to guacd, proxying a connection to the VNC server above
         GuacamoleSocket socket = new ConfiguredGuacamoleSocket(
-                new InetGuacamoleSocket(hostname, port),
+                new InetGuacamoleSocket(hostname, GUACD_PORT),
                 config
         );
 
