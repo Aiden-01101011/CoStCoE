@@ -22,11 +22,28 @@ package com.github.costcoe.costcoe.web;
 import org.apache.commons.csv.*;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CSVManager {
+
     private static final String CSV_FILE_PATH = System.getenv("CSV_FILE_PATH");
+    private static final int max_open_ports = Integer.parseInt(System.getenv("MAX_OPEN_PORTS"));
+    private static boolean[] takenPorts = new boolean[max_open_ports];
+    private static final int start_port = Integer.parseInt(System.getenv("START_PORT"));
+
+    public static void init(){
+        try {
+            File file = new File(CSV_FILE_PATH);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void addSession(String sessionId, String nodeIp, String port) {
         try {
@@ -143,6 +160,7 @@ public class CSVManager {
             // Find the record with the specified sessionId and remove it
             for (int i = 0; i < records.size(); i++) {
                 if (records.get(i).get("SessionID").equals(sessionId)) {
+                    takenPorts[Integer.parseInt(records.get(i).get("Port")) - start_port] = false;
                     records.remove(i);
                     break; // Stop searching once found
                 }
@@ -153,6 +171,34 @@ public class CSVManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    // finds the lowest available port
+    public static String availablePort(){ 
+        try {
+
+            List<String> nodePorts = new ArrayList<>();
+
+            // Read all records from the CSV file
+            List<CSVRecord> records = readCSVFile();
+           // compare all taken ports on given node
+            for (CSVRecord record : records) {
+                 nodePorts.add(record.get("Port"));
+            }
+
+            int lowestPort = max_open_ports - 1;
+            for (int i = 0; i < nodePorts.size(); i++){
+                if((!takenPorts[(Integer.parseInt(nodePorts.get(i)) - start_port) - 1]) && i < lowestPort){
+                    lowestPort = i;
+                }
+            }
+            takenPorts[lowestPort] = true;
+            return Integer.toString(lowestPort + start_port);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     // Method to read all records from the CSV file

@@ -33,7 +33,7 @@ import org.apache.guacamole.servlet.GuacamoleHTTPTunnelServlet;
 //import com.jcraft.jsch.JSch;
 
 //import com.jcraft.jsch.Session;
-import java.util.Arrays;
+//import java.util.Arrays;
 
 /**
  * Simple tunnel example with hard-coded configuration parameters.
@@ -49,19 +49,6 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         // Data from JS
         int user = Integer.parseInt(request.getParameter("USERNUM"));
         //int image = Integer.parseInt(request.getParameter("IMAGE"));
-        // SSH connection information
-        String SSH_HOST = System.getenv("SSH_HOST");
-        String SSH_USER = System.getenv("SSH_USER");
-        String SSH_PASSWORD = System.getenv("SSH_PASSWORD");
-
-        SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
-        String name = "";
-        int port = 34000;
-        // String[] response = ssh.execute(String.format("sudo docker service create --name %s --port %d:5901 b3c0056806ac", name, port)).clone();
-        // response = ssh.execute(String.format("sudo docker service ps --format '{{.Node}}' %s", response[0])).clone();
-        // System.out.println(response[0]);
-        //System.out.println(Arrays.toString(ssh.execute("echo testing")));
-        ssh.disconnect();
 
         String vncIp;
         switch (user) {

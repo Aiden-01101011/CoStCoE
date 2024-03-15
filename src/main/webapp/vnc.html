@@ -56,18 +56,12 @@
                 alert(error);
             };
 
-            // Load user data
-            let USER = sessionStorage.getItem('user');
-            let IMAGE = sessionStorage.getItem('image');
-            // Connect
-            guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&USERNUM=${USER}&IMAGE=${IMAGE}`);
             window.onresize = function () {
                 let GUAC_WIDTH  = 720;//Math.round(display.clientWidth);
                 let GUAC_HEIGHT = 720;//Math.round(display.clientHeight);
                 //---- Resize RDP window by sendMessage to the Server Guacamole
                 guac.sendSize(GUAC_WIDTH, GUAC_HEIGHT);
             }
-
 
 
             // Disconnect on close
@@ -101,6 +95,14 @@
 
             ws.onmessage = function(event) {
                 console.log("Received message: " + event.data);
+
+                if (event.data == "GO"){
+                    // Load user data
+                    let USER = sessionStorage.getItem('user');
+                    let IMAGE = sessionStorage.getItem('image');
+                    // Connect
+                    guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&USERNUM=${USER}&IMAGE=${IMAGE}`);
+                }
             };
 
             ws.onclose = function(event) {
