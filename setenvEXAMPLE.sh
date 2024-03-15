@@ -21,3 +21,11 @@ export SSH_HOST= # IP address
 # guacd connection ifno
 export GUACD_HOST= # IP address
 export GUACD_PORT=4822
+
+export NODE_IP_MANAGER=
+export NODE_IP_1=
+export NODE_IP_2=
+
+export NODE_ID_MANAGER=
+export NODE_ID_1=
+export NODE_ID_2=
