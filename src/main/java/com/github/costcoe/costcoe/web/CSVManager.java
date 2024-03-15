@@ -160,7 +160,7 @@ public class CSVManager {
             // Find the record with the specified sessionId and remove it
             for (int i = 0; i < records.size(); i++) {
                 if (records.get(i).get("SessionID").equals(sessionId)) {
-                    takenPorts[Integer.parseInt(records.get(i).get("Port")) - start_port] = false;
+                    takenPorts[Integer.parseInt(records.get(i).get("Port")) - start_port - 1] = false;
                     records.remove(i);
                     break; // Stop searching once found
                 }
@@ -173,7 +173,7 @@ public class CSVManager {
         }
     }
     // finds the lowest available port
-    public static String availablePort(){ 
+    public static String availablePort() throws OutOfPortsException{ 
         try {
 
             List<String> nodePorts = new ArrayList<>();
@@ -185,13 +185,19 @@ public class CSVManager {
                  nodePorts.add(record.get("Port"));
             }
 
-            int lowestPort = max_open_ports - 1;
-            for (int i = 0; i < nodePorts.size(); i++){
-                if((!takenPorts[(Integer.parseInt(nodePorts.get(i)) - start_port) - 1]) && i < lowestPort){
-                    lowestPort = i;
+            int lowestPort = -1;
+            for (int i = 0; i < takenPorts.length; i++){
+                if (!takenPorts[i]) {
+                    takenPorts[i] = true;
+                    lowestPort = i + 1;
+                    break;
                 }
             }
-            takenPorts[lowestPort] = true;
+
+            if (lowestPort == -1){
+                throw new OutOfPortsException("Out of ports!!!!!!");
+            }
+
             return Integer.toString(lowestPort + start_port);
 
         } catch (IOException e) {
@@ -219,5 +225,13 @@ public class CSVManager {
                 csvPrinter.printRecord(record);
             }
         }
+    }
+}
+
+class OutOfPortsException extends Exception{
+    public OutOfPortsException() {}
+
+    public OutOfPortsException(String message){
+        super(message);
     }
 }

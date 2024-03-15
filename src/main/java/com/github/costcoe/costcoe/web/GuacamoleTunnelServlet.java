@@ -47,29 +47,15 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         String hostname = System.getenv("GUACD_HOST");
         int GUACD_PORT = Integer.parseInt(System.getenv("GUACD_PORT"));
         // Data from JS
-        int user = Integer.parseInt(request.getParameter("USERNUM"));
+        //int user = Integer.parseInt(request.getParameter("USERNUM"));
         //int image = Integer.parseInt(request.getParameter("IMAGE"));
-
-        String vncIp;
-        switch (user) {
-            case 1:
-                vncIp = "172.17.0.3";
-                break;
-
-            case 2:
-                vncIp = "172.17.0.5";
-                break;
         
-            default:
-                vncIp = "172.17.0.3";
-                break;
-        }
 
         // VNC connection information
         GuacamoleConfiguration config = new GuacamoleConfiguration();
         config.setProtocol("vnc");
-        config.setParameter("hostname", vncIp);
-        config.setParameter("port", "5901");
+        config.setParameter("hostname", request.getParameter("IP"));
+        config.setParameter("port", request.getParameter("PORT"));
         config.setParameter("password", "headless");
         config.setParameter("width", "500");
         config.setParameter("height", "500");

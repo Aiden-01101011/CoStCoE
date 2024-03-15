@@ -95,13 +95,16 @@
 
             ws.onmessage = function(event) {
                 console.log("Received message: " + event.data);
-
-                if (event.data == "GO"){
+                if (event.data.substring(0,2) == "GO"){
                     // Load user data
                     let USER = sessionStorage.getItem('user');
+                    let IP = event.data.substring(2,16);
+                    let PORT = event.data.substring(16,21);
+                    let SID = event.data.substring(21);
+
                     let IMAGE = sessionStorage.getItem('image');
                     // Connect
-                    guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&USERNUM=${USER}&IMAGE=${IMAGE}`);
+                    guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&USERNUM=${USER}&IMAGE=${IMAGE}&IP=${IP}&PORT=${PORT}&SID=${SID}`);
                 }
             };
 

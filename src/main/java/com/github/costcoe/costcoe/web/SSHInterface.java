@@ -19,123 +19,128 @@
 
 package com.github.costcoe.costcoe.web;
 
-import java.util.ArrayList;
+import java.util.Properties;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.InputStream;
 
 public class SSHInterface {
 
-    private String user;
-    private String host;
-    private String password;
-    private int port;
     private Session session;
 
-    // Constructor with mandatory parameters
-    public SSHInterface(String host, String user, String password) {
-        try {
-            this.user = user;
-            this.host = host;
-            this.password = password;
-            this.port = 22; // Default port if not specified
+    private String username = System.getenv("SSH_USER");
+    private String password = System.getenv("SSH_PASSWORD");
+    private String hostname = System.getenv("SSH_HOST");
 
-            JSch jsch = new JSch();
-            this.session = jsch.getSession(this.user, host, 22);
-            this.session.setPassword(password);
-            this.session.setConfig("StrictHostKeyChecking", "no");
-            this.session.connect();
-        }
-        catch (JSchException e){
-            e.printStackTrace();
-        }
+    public SSHInterface() { }
+
+    public SSHInterface(String hostname, String username, String password) {
+        this.hostname = hostname;
+        this.username = username;
+        this.password = password;
     }
 
-    // Constructor with optional port parameter
-    public SSHInterface(String host, String user, String password, int port){
-        try {
-            this.user = user;
-            this.host = host;
-            this.password = password;
-            this.port = port;
-
-            JSch jsch = new JSch();
-            this.session = jsch.getSession(this.user, host, 22);
-            this.session.setPassword(password);
-            this.session.setConfig("StrictHostKeyChecking", "no");
-            this.session.connect();
-        }
-        catch (JSchException e){
-            e.printStackTrace();
-        }
+    public void open() throws JSchException {
+        open(this.hostname, this.username, this.password);
     }
 
-    // Getter methods for the class fields (if needed)
-    public String getUser() {
-        return user;
+    public void open(String hostname, String username, String password) throws JSchException{
+
+        JSch jSch = new JSch();
+
+        session = jSch.getSession(username, hostname, 22);
+        Properties config = new Properties(); 
+        config.put("StrictHostKeyChecking", "no");  // not recommended
+        session.setConfig(config);
+        session.setPassword(password);
+
+        System.out.println("Connecting SSH to " + hostname + " - Please wait for few seconds... ");
+        session.connect();
+        System.out.println("Connected!");
     }
 
-    public String getHost() {
-        return host;
+    public String execute(String command) throws JSchException, IOException {
+        String ret = "";
+
+        if (!session.isConnected())
+            throw new RuntimeException("Not connected to an open session.  Call open() first!");
+
+        ChannelExec channel = null;
+        channel = (ChannelExec) session.openChannel("exec");
+
+        channel.setCommand(command);
+        channel.setInputStream(null);
+
+        InputStream in = channel.getInputStream(); // channel.getInputStream();
+
+        channel.connect();
+
+        ret = getChannelOutput(channel, in);
+
+        channel.disconnect();
+
+        System.out.println("Finished sending commands!");
+
+        return ret;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public int getPort() {
-        return port;
-    }
+    private String getChannelOutput(Channel channel, InputStream in) throws IOException{
 
-    public void disconnect() {
-        this.session.disconnect();
-    }
-
-    public String[] execute(String command) { // deal with exception handling later
-        try{
-            ChannelExec channel = (ChannelExec) this.session.openChannel("exec");
-            channel.setCommand(command);
-
-            // Get input stream to read the command's output
-            InputStream inputStream = channel.getInputStream();
-
-            channel.connect();
-
-            // Read the command's output
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            ArrayList<String> outputList = new ArrayList<String>();
-
-            while ((line = reader.readLine()) != null) {
-                outputList.add(line);
+        byte[] buffer = new byte[1024];
+        StringBuilder strBuilder = new StringBuilder();
+        int timeout = 10; //timeout in seconds
+        String line = "";
+        for (int i = 0; i < timeout; i++) {
+            while (in.available() > 0) {
+                int l = in.read(buffer, 0, 1024);
+                if (l < 0) {
+                    break;
+                }
+                strBuilder.append(new String(buffer, 0, l));
+                System.out.println(line);
             }
-            // Close resources
-            reader.close();
-            inputStream.close();
 
-            channel.disconnect();
+            if(line.contains("logout")){
+                break;
+            }
 
-            String[] output = new String[outputList.size()];
-            outputList.toArray(output);
-
-            return output;
+            if (channel.isClosed()){
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ee){}
         }
-        catch (JSchException e){
+
+        return strBuilder.toString();   
+    }
+
+    public void disconnect(){        
+        session.disconnect();
+        System.out.println("Disconnected channel and session");
+    }
+
+
+    public static void main(String[] args){
+
+        SSHInterface ssh = new SSHInterface();
+        try {
+            ssh.open();
+            String ret = ssh.execute("ls -l");
+
+            System.out.println(ret);
+            ssh.disconnect();
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
-        }
-        catch (IOException e){
-            //e.printStackTrace();
-            return null;
         }
     }
 }
-
-
