@@ -189,7 +189,7 @@ public class CSVManager {
             for (int i = 0; i < takenPorts.length; i++){
                 if (!takenPorts[i]) {
                     takenPorts[i] = true;
-                    lowestPort = i + 1;
+                    lowestPort = i;
                     break;
                 }
             }

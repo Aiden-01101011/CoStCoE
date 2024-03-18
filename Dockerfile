@@ -7,6 +7,8 @@ ADD target/*.war /usr/local/tomcat/webapps/
 
 ADD setenv.sh /usr/local/tomcat/bin
 
+ADD context.xml /usr/local/tomcat/conf
+
 EXPOSE 8080
 
 CMD ["/usr/local/tomcat/bin/catalina.sh", "run"]

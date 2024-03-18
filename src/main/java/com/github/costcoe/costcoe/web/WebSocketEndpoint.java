@@ -56,20 +56,35 @@ public class WebSocketEndpoint extends Endpoint {
         String response = null;
         try{
             port = CSVManager.availablePort();
+            StringBuilder commandBuilder = new StringBuilder();
             ssh.open();
-            response = ssh.execute(String.format("sudo docker service create --name %s -d --publish published=%s,target=5901,mode=host accetto/ubuntu-vnc-xfce", session.getId(), port));
+
+            // Execute command to create docker service
+            commandBuilder.append("sudo docker service create --name ")
+                .append(session.getId())
+                .append(" -d --publish published=")
+                .append(port)
+                .append(",target=5901,mode=host accetto/ubuntu-vnc-xfce");
+            response = ssh.execute(commandBuilder.toString());
             System.out.println(response);
-            response = ssh.execute(String.format("sudo docker service ps --format '{{.Node}}' %s", response));
+
+            // Execute command to get service node
+            commandBuilder.setLength(0); // Clear StringBuilder
+            commandBuilder.append("sudo docker service ps --format '{{.Node}}' ")
+                .append(response);
+            response = ssh.execute(commandBuilder.toString());
             System.out.println(response);
-            response = ssh.execute(String.format("sudo docker node inspect --format '{{.ID}}' %s", response));
+
+            // Execute command to get node ID
+            commandBuilder.setLength(0); // Clear StringBuilder
+            commandBuilder.append("sudo docker node inspect --format '{{.ID}}' ")
+                .append(response);
+            response = ssh.execute(commandBuilder.toString());
             System.out.println(response);
+
             ssh.disconnect();
 
             String nodeID = response.trim();
-            System.out.println(nodeID);
-            System.out.println(NODE_ID_1);
-            System.out.println(NODE_ID_2);
-            System.out.println(NODE_ID_MANAGER);
             String nodeIP;
             if (nodeID.equals(NODE_ID_MANAGER)) {
                 nodeIP = NODE_IP_MANAGER;
@@ -103,7 +118,7 @@ public class WebSocketEndpoint extends Endpoint {
     public void onClose(Session session, CloseReason closeReason) {
         // Cancel the timer when the session is closed
         timer.cancel();
-        System.out.println("Client not responding. Performing actions...");
+        System.out.println("Session Closed - Performing actions...");
         CSVManager.deleteSessionEntry(session.getId());
 
         try {
@@ -131,8 +146,12 @@ public class WebSocketEndpoint extends Endpoint {
                 System.out.println("Sending ping!");
                 session.getBasicRemote().sendPing(ByteBuffer.wrap("Ping".getBytes()));
             } catch (IOException e) {
-                System.err.println("Ping failed to send!");
-                e.printStackTrace();
+                System.out.println("Ping failed to send!");
+                try {
+                    session.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }
