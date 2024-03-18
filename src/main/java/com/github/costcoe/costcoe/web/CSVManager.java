@@ -28,10 +28,10 @@ import java.util.List;
 
 public class CSVManager {
 
-    private static final String CSV_FILE_PATH = System.getenv("CSV_FILE_PATH");
-    private static final int max_open_ports = Integer.parseInt(System.getenv("MAX_OPEN_PORTS"));
+    private static final String CSV_FILE_PATH = System.getProperty("CSV_FILE_PATH");
+    private static final int max_open_ports = Integer.parseInt(System.getProperty("MAX_OPEN_PORTS"));
     private static boolean[] takenPorts = new boolean[max_open_ports];
-    private static final int start_port = Integer.parseInt(System.getenv("START_PORT"));
+    private static final int start_port = Integer.parseInt(System.getProperty("START_PORT"));
 
     public static void init(){
         try {

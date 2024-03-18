@@ -33,10 +33,10 @@ import java.io.InputStream;
 public class SSHInterface {
 
     private Session session;
-
-    private String username = System.getenv("SSH_USER");
-    private String password = System.getenv("SSH_PASSWORD");
-    private String hostname = System.getenv("SSH_HOST");
+    
+    private String username = System.getProperty("SSH_USER");
+    private String password = System.getProperty("SSH_PASSWORD");
+    private String hostname = System.getProperty("SSH_HOST");
 
     public SSHInterface() { }
 
@@ -127,20 +127,4 @@ public class SSHInterface {
         System.out.println("Disconnected channel and session");
     }
 
-
-    public static void main(String[] args){
-
-        SSHInterface ssh = new SSHInterface();
-        try {
-            ssh.open();
-            String ret = ssh.execute("ls -l");
-
-            System.out.println(ret);
-            ssh.disconnect();
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 }

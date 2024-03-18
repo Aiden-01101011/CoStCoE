@@ -36,14 +36,31 @@ import com.jcraft.jsch.JSchException;
 @ServerEndpoint("/ws")
 public class WebSocketEndpoint extends Endpoint {
 
-    private SSHInterface ssh = new SSHInterface();
+    // Define the variables without initialization
+    private static final String NODE_IP_MANAGER;
+    private static final String NODE_IP_1;
+    private static final String NODE_IP_2;
+    private static final String NODE_ID_MANAGER;
+    private static final String NODE_ID_1;
+    private static final String NODE_ID_2;
+    private static final String SSH_USER;
+    private static final String SSH_PASSWORD;
+    private static final String SSH_HOST;
 
-    private static final String NODE_IP_MANAGER = System.getenv("NODE_IP_MANAGER");
-    private static final String NODE_IP_1 = System.getenv("NODE_IP_1");
-    private static final String NODE_IP_2 = System.getenv("NODE_IP_2");
-    private static final String NODE_ID_MANAGER = System.getenv("NODE_ID_MANAGER");
-    private static final String NODE_ID_1 = System.getenv("NODE_ID_1");
-    private static final String NODE_ID_2 = System.getenv("NODE_ID_2");
+    // Static initialization block to initialize the variables
+    static {
+        NODE_IP_MANAGER = System.getProperty("NODE_IP_MANAGER");
+        NODE_IP_1 = System.getProperty("NODE_IP_1");
+        NODE_IP_2 = System.getProperty("NODE_IP_2");
+        NODE_ID_MANAGER = System.getProperty("NODE_ID_MANAGER");
+        NODE_ID_1 = System.getProperty("NODE_ID_1");
+        NODE_ID_2 = System.getProperty("NODE_ID_2");
+        SSH_USER = System.getProperty("SSH_USER");
+        SSH_PASSWORD = System.getProperty("SSH_PASSWORD");
+        SSH_HOST = System.getProperty("SSH_HOST");
+    }
+
+    private SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
 
     private Timer timer;
     @Override

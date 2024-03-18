@@ -44,8 +44,8 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
     protected GuacamoleTunnel doConnect(HttpServletRequest request) throws GuacamoleException{
 
         // guacd connection information
-        String hostname = System.getenv("GUACD_HOST");
-        int GUACD_PORT = Integer.parseInt(System.getenv("GUACD_PORT"));
+        String hostname = System.getProperty("GUACD_HOST");
+        int GUACD_PORT = Integer.parseInt(System.getProperty("GUACD_PORT"));
         // Data from JS
         //int user = Integer.parseInt(request.getParameter("USERNUM"));
         //int image = Integer.parseInt(request.getParameter("IMAGE"));
