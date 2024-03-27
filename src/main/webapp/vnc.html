@@ -37,7 +37,8 @@
         <script type="text/javascript"> /* <![CDATA[ */
             
             // Connect to websocket
-            var ws = new WebSocket("ws://localhost:8080/CoStCoE-0.1/ws"); //ws://localhost:8080/guacamole-example-1.5.3/ws
+            var ws = new WebSocket("ws://localhost:8080/CoStCoE-0.1/ws");
+
             // Get display div from document
             var display = document.getElementById("display");
 
@@ -97,14 +98,15 @@
                 console.log("Received message: " + event.data);
                 if (event.data.substring(0,2) == "GO"){
                     // Load user data
-                    let USER = sessionStorage.getItem('user');
                     let IP = event.data.substring(2,16);
                     let PORT = event.data.substring(16,21);
-                    let SID = event.data.substring(21);
-
-                    let IMAGE = sessionStorage.getItem('image');
+                    let IMAGE = event.data.substring(21,22);
+                    let SID = event.data.substring(22);
                     // Connect
-                    guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&USERNUM=${USER}&IMAGE=${IMAGE}&IP=${IP}&PORT=${PORT}&SID=${SID}`);
+                    guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&IP=${IP}&PORT=${PORT}&IMAGE=${IMAGE}&SID=${SID}`);
+                }
+                if (event.data == "done"){
+                    ws.send(sessionStorage.getItem('image'));
                 }
             };
 

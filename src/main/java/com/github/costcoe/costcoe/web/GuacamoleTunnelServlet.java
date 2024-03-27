@@ -47,8 +47,25 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         String hostname = System.getProperty("GUACD_HOST");
         int GUACD_PORT = Integer.parseInt(System.getProperty("GUACD_PORT"));
         // Data from JS
-        //int user = Integer.parseInt(request.getParameter("USERNUM"));
-        //int image = Integer.parseInt(request.getParameter("IMAGE"));
+        int image = Integer.parseInt(request.getParameter("IMAGE"));
+        String password;
+        switch (image) {
+            default: //if image is not 1-4, default to 1
+                password = System.getProperty("VNC_PASSWORD_1");
+                break;
+        
+            case 2:
+                password = System.getProperty("VNC_PASSWORD_2");
+                break;
+
+            case 3:
+                password = System.getProperty("VNC_PASSWORD_3");
+                break;
+
+            case 4:
+                password = System.getProperty("VNC_PASSWORD_4");
+                break;
+        }
         
 
         // VNC connection information
@@ -56,7 +73,7 @@ public class GuacamoleTunnelServlet extends GuacamoleHTTPTunnelServlet {
         config.setProtocol("vnc");
         config.setParameter("hostname", request.getParameter("IP"));
         config.setParameter("port", request.getParameter("PORT"));
-        config.setParameter("password", "headless");
+        config.setParameter("password", password);
         config.setParameter("width", "500");
         config.setParameter("height", "500");
 

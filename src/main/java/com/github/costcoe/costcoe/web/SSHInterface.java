@@ -95,7 +95,7 @@ public class SSHInterface {
 
         byte[] buffer = new byte[1024];
         StringBuilder strBuilder = new StringBuilder();
-        int timeout = 10; //timeout in seconds
+        int timeout = 30; //timeout in seconds
         String line = "";
         for (int i = 0; i < timeout; i++) {
             while (in.available() > 0) {
