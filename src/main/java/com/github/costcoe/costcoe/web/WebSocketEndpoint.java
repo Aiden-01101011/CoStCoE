@@ -85,16 +85,19 @@ public class WebSocketEndpoint extends Endpoint {
         VNC_IMAGE_4 = System.getProperty("VNC_IMAGE_4");
     }
 
+    String sessionID;
+
     private SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
 
     private Timer timer;
     @Override
     public void onOpen(Session session, EndpointConfig config) {
+        sessionID = session.getId();
 
         CSVManager.init();
         // Register a periodic task to check client activity
         timer = new Timer();
-        timer.scheduleAtFixedRate(new CheckClientActivity(session), 60000, 5000); // check every 5 secs
+        timer.scheduleAtFixedRate(new CheckClientActivity(session), 60000, 20000); // check every 5 secs
 
         session.addMessageHandler(new MessageHandler.Whole<String>() {
             @Override
@@ -110,15 +113,18 @@ public class WebSocketEndpoint extends Endpoint {
                         throw new IllegalArgumentException("requested image out of bounds");
                     }
                     try{
-                        String port;
+                        String port = Integer.toString(CSVManager.getPort(sessionID));
                         try {
-                            port = CSVManager.availablePort();
+                            if (port.equals("0")) {
+                                port = CSVManager.availablePort();
+                            }
+                            System.out.println(port);
                         } catch (OutOfPortsException e) {
                             e.printStackTrace();
                             session.close();
                             return;
                         }
-                        String response = startContainer(image, port, session.getId());
+                        String response = startContainer(image, port, sessionID);
                         System.out.println(response);
                         String nodeID = response;
                         String nodeIP;
@@ -133,15 +139,15 @@ public class WebSocketEndpoint extends Endpoint {
                             throw new RuntimeException("returned node ID does not match any ID's defined in config");
                         }
                         
-                        System.out.println(String.format("%s %s %s", session.getId(), nodeIP, port));
-                        CSVManager.addSession(session.getId(), nodeIP, port);
+                        System.out.println(String.format("%s %s %s", sessionID, nodeIP, port));
+                        CSVManager.addSession(sessionID, nodeIP, port);
         
                         StringBuilder messageBuilder = new StringBuilder();
                         messageBuilder.append("GO")
                                       .append(nodeIP)
                                       .append(port)
                                       .append(image)
-                                      .append(session.getId());
+                                      .append(sessionID);
         
                         session.getBasicRemote().sendText(messageBuilder.toString());
         
@@ -164,11 +170,15 @@ public class WebSocketEndpoint extends Endpoint {
         // Cancel the timer when the session is closed
         timer.cancel();
         System.out.println("Session Closed - Performing actions...");
-        CSVManager.deleteSessionEntry(session.getId());
+        CSVManager.deleteSessionEntry(sessionID);
 
         try {
             ssh.open();
-            System.out.println(ssh.execute(String.format("sudo docker service rm %s", session.getId())));
+            for(int i = 0; i<2; i++){
+                if(ssh.execute(String.format("sudo docker service rm %s", sessionID)).equals(sessionID)){
+                    break;
+                }
+            }
             ssh.disconnect();
         }
         catch (JSchException | IOException e){
@@ -179,7 +189,6 @@ public class WebSocketEndpoint extends Endpoint {
     private String startContainer(int image, String port, String sessionID) {
         String response = null;
         try {
-            port = CSVManager.availablePort();
             StringBuilder commandBuilder = new StringBuilder();
             ssh.open();
 
@@ -198,7 +207,7 @@ public class WebSocketEndpoint extends Endpoint {
                     break;
                 
                 case 2:
-                    commandBuilder.append("sudo docker service create -t --name ")
+                    commandBuilder.append("sudo docker service create --name ")
                         .append(sessionID)
                         .append(" -d --publish published=")
                         .append(port)
@@ -247,7 +256,7 @@ public class WebSocketEndpoint extends Endpoint {
             response = ssh.execute(commandBuilder.toString()).trim();
 
             ssh.disconnect();
-        } catch (OutOfPortsException | JSchException | IOException e) {
+        } catch (JSchException | IOException e) {
             e.printStackTrace();
         }
         return response;

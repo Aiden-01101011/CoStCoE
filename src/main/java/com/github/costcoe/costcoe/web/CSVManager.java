@@ -91,7 +91,7 @@ public class CSVManager {
         return null;
     }
     
-    public static String getPort(String sessionId) {
+    public static int getPort(String sessionId) {
         try {
             // Read all records from the CSV file
             List<CSVRecord> records = readCSVFile();
@@ -99,15 +99,16 @@ public class CSVManager {
             for (CSVRecord record : records) {
                 if (record.get("SessionID").equals(sessionId)) {
                     //return data once found
-                    return record.toMap().get("Port");
+                    return Integer.parseInt(record.toMap().get("Port"));
                 }
             }
 
+            return 0; // No port associated with sessionID
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return -1;
     }
 
     // Method to update user data for a session in the CSV file
