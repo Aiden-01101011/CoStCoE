@@ -86,7 +86,7 @@
                         <executable>docker</executable>
                         <successCodes>0,1</successCodes>
                         <workingDirectory>${project.basedir}</workingDirectory>
-                        <commandlineArgs>rmi mywebapp:epic</commandlineArgs>
+                        <commandlineArgs>rmi costcoeweb:latest</commandlineArgs>
                       </configuration>
                     </execution>
                     <!--Build Image-->
@@ -102,7 +102,7 @@
                         <arguments>
                             <argument>build</argument>
                             <argument>-t</argument>
-                            <argument>mywebapp:epic</argument>
+                            <argument>costcoeweb:latest</argument>
                             <argument>.</argument>
                         </arguments>
                       </configuration>
@@ -117,7 +117,7 @@
                       <configuration>
                         <executable>docker</executable>
                         <workingDirectory>${project.basedir}</workingDirectory>
-                        <commandlineArgs>run -dit --name tomcat -p 8080:8080 -p 22:22 mywebapp:epic</commandlineArgs>
+                        <commandlineArgs>run -dit --name tomcat -p 8080:8080 -p 22:22 costcoeweb:latest</commandlineArgs>
                       </configuration>
                     </execution>
                 </executions>
