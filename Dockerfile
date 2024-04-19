@@ -1,3 +1,5 @@
+#Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
 # Use the Tomcat 9.0 base image
 FROM tomcat:9.0
 
