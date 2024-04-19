@@ -117,7 +117,7 @@
                       <configuration>
                         <executable>docker</executable>
                         <workingDirectory>${project.basedir}</workingDirectory>
-                        <commandlineArgs>run -dit --name tomcat -p 8080:8080 -p 22:22 costcoeweb:latest</commandlineArgs>
+                        <commandlineArgs>run -dit --name tomcat -p 8080:8080 -p 8443:8443 -p 22:22 costcoeweb:latest</commandlineArgs>
                       </configuration>
                     </execution>
                 </executions>
