@@ -166,6 +166,7 @@
                     <exclude>src/main//rescources/SessionData.csv</exclude>
                     <exclude>ssl.csr</exclude>
                     <exclude>ssl.key</exclude>
+                    <exclude>ssl.crt</exclude>
                   </excludes>
                 </configuration>
                 <!-- Bind RAT to validate phase -->
