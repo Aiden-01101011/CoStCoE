@@ -7,7 +7,7 @@ FROM tomcat:9.0
 LABEL maintainer="me"
 
 # Copy SSL certificate and key into the container
-COPY ssl.crt /usr/local/tomcat/conf/ssl.crt
+COPY ssl.crt /usr/local/tomcat/conf/ssl.csr
 COPY ssl.key /usr/local/tomcat/conf/ssl.key
 
 # Set environment variables for SSL keystore password and key alias
