@@ -168,6 +168,7 @@
                     <exclude>ssl.key</exclude>
                     <exclude>ssl.crt</exclude>
                     <exclude>ssl.pem</exclude>
+                    <exclude>ssl.p12</exclude>
                   </excludes>
                 </configuration>
                 <!-- Bind RAT to validate phase -->
