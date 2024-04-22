@@ -7,8 +7,6 @@ FROM tomcat:9.0
 LABEL maintainer="me"
 
 # Copy SSL certificate and key into the container
-RUN mkdir
-
 COPY ./ssl.crt /usr/local/tomcat/conf/ssl.crt
 COPY ./ssl.key /usr/local/tomcat/conf/ssl.key
 
