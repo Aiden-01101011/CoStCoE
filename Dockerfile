@@ -7,7 +7,7 @@ FROM tomcat:9.0
 LABEL maintainer="me"
 
 # Copy SSL certificate and key into the container
-COPY ssl.csr /usr/local/tomcat/conf/ssl.csr
+COPY ssl.crt /usr/local/tomcat/conf/ssl.crt
 COPY ssl.key /usr/local/tomcat/conf/ssl.key
 
 # Set environment variables for SSL keystore password and key alias
@@ -15,7 +15,7 @@ ENV SSL_KEYSTORE_PASS changeit
 ENV SSL_KEY_ALIAS tomcat
 
 # Update Tomcat server.xml to enable SSL with environment variables
-RUN sed -i 's/<Connector port="8080"/<Connector port="8443" scheme="https" secure="true" SSLEnabled="true" keystoreFile="\/usr\/local\/tomcat\/conf\/ssl.csr" keystorePass="'"$SSL_KEYSTORE_PASS"'" keyAlias="'"$SSL_KEY_ALIAS"'" keystoreType="PKCS12"/' /usr/local/tomcat/conf/server.xml
+RUN sed -i 's/<Connector port="8080"/<Connector port="8443" scheme="https" secure="true" SSLEnabled="true" keystoreFile="\/usr\/local\/tomcat\/conf\/ssl.crt" keystorePass="'"$SSL_KEYSTORE_PASS"'" keyAlias="'"$SSL_KEY_ALIAS"'" keystoreType="PKCS12"/' /usr/local/tomcat/conf/server.xml
 
 # Add your application WAR file to Tomcat's webapps directory
 ADD target/*.war /usr/local/tomcat/webapps/
