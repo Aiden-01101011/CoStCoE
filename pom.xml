@@ -167,6 +167,7 @@
                     <exclude>ssl.csr</exclude>
                     <exclude>ssl.key</exclude>
                     <exclude>ssl.crt</exclude>
+                    <exclude>ssl.pem</exclude>
                   </excludes>
                 </configuration>
                 <!-- Bind RAT to validate phase -->
