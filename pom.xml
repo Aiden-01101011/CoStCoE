@@ -164,6 +164,8 @@
                     <exclude>setenv.sh</exclude>
                     <exclude>setenvEXAMPLE.sh</exclude>
                     <exclude>src/main//rescources/SessionData.csv</exclude>
+                    <exclude>ssl.csr</exclude>
+                    <exclude>ssl.key</exclude>
                   </excludes>
                 </configuration>
                 <!-- Bind RAT to validate phase -->
