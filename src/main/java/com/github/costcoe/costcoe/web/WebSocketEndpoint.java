@@ -36,7 +36,7 @@ import javax.net.ssl.SSLEngine;
 import com.jcraft.jsch.JSchException;
 
 
-@ServerEndpoint("/ws")
+@ServerEndpoint("/wss")
 public class WebSocketEndpoint extends Endpoint {
 
     // Define the variables without initialization
