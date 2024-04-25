@@ -32,8 +32,6 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSession;
 
 import com.jcraft.jsch.JSchException;
 
