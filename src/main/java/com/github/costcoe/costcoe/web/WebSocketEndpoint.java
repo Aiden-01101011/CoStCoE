@@ -30,6 +30,10 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSession;
 
 import com.jcraft.jsch.JSchException;
 
@@ -92,6 +96,22 @@ public class WebSocketEndpoint extends Endpoint {
     private Timer timer;
     @Override
     public void onOpen(Session session, EndpointConfig config) {
+
+        SSLContext sslContext = null;
+        SSLEngine sslEngine = null;
+        try {
+            sslContext = SSLContext.getDefault();
+            sslEngine = sslContext.createSSLEngine();
+            sslEngine.setUseClientMode(false); // Set to false for server mode
+            sslEngine.setNeedClientAuth(false); // Set to true if client authentication is required
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Set SSL parameters for the session
+        session.getUserProperties().put("org.apache.tomcat.websocket.SSL_CONTEXT", sslContext);
+        session.getUserProperties().put("org.apache.tomcat.websocket.SSL_ENGINE", sslEngine);
+
         sessionID = session.getId();
 
         CSVManager.init();
