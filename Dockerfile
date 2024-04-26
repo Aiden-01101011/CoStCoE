@@ -20,6 +20,8 @@ RUN sed -i 's/<Connector port="8080"/<Connector port="8443" SSLEnabled="true" sc
 # Add your application WAR file to Tomcat's webapps directory
 ADD target/*.war /usr/local/tomcat/webapps/
 
+ADD setenv.sh /usr/local/tomcat/bin
+
 # Expose port 8080 (default Tomcat HTTP port)
 EXPOSE 8080
 
