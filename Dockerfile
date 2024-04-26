@@ -15,7 +15,7 @@ ENV SSL_KEYSTORE_PASS changeit
 ENV SSL_KEY_ALIAS tomcat
 
 # Update Tomcat server.xml to enable SSL with environment variables
-RUN sed -i 's/<Connector port="8080"/<Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" keyAlias="'"$SSL_KEY_ALIAS"'" keystoreFile="\/usr\/local\/tomcat\/conf\/ssl.p12" keystoreType="PKCS12" keystorePass="'"$SSL_KEYSTORE_PASS"'"/' /usr/local/tomcat/conf/server.xml
+RUN sed -i 's/<Connector port="8080"/<Connector port="8443" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" keyAlias="'"$SSL_KEY_ALIAS"'" keystoreFile="\/usr\/local\/tomcat\/conf\/ssl.p12" keystoreType="PKCS12" keystorePass="'"$SSL_KEYSTORE_PASS"'"/' /usr/local/tomcat/conf/server.xml
 
 # Add your application WAR file to Tomcat's webapps directory
 ADD target/*.war /usr/local/tomcat/webapps/
