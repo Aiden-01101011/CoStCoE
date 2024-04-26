@@ -111,7 +111,7 @@ public class WebSocketEndpoint extends Endpoint {
         session.getUserProperties().put("org.apache.tomcat.websocket.SSL_ENGINE", sslEngine);
 
         sessionID = session.getId();
-
+        System.out.println(System.getProperty("MAX_OPEN_PORTS"));
         CSVManager.init();
         // Register a periodic task to check client activity
         timer = new Timer();
