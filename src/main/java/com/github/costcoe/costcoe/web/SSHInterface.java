@@ -37,24 +37,26 @@ public class SSHInterface {
     private String username = System.getProperty("SSH_USER");
     private String password = System.getProperty("SSH_PASSWORD");
     private String hostname = System.getProperty("SSH_HOST");
+    private int port = Integer.parseInt(System.getProperty("SSH_PORT"));
 
     public SSHInterface() { }
 
-    public SSHInterface(String hostname, String username, String password) {
+    public SSHInterface(String hostname, String username, String password, int port) {
         this.hostname = hostname;
         this.username = username;
         this.password = password;
+        this.port = port;
     }
 
     public void open() throws JSchException {
-        open(this.hostname, this.username, this.password);
+        open(this.hostname, this.username, this.password, this.port);
     }
 
-    public void open(String hostname, String username, String password) throws JSchException{
+    public void open(String hostname, String username, String password, int port) throws JSchException{
 
         JSch jSch = new JSch();
 
-        session = jSch.getSession(username, hostname, 22);
+        session = jSch.getSession(username, hostname, port);
         Properties config = new Properties(); 
         config.put("StrictHostKeyChecking", "no");  // not recommended
         session.setConfig(config);

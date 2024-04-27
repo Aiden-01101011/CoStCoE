@@ -15,6 +15,7 @@ export JAVA_OPTS="$JAVA_OPTS -DCSV_FILE_PATH=src/main/resources/SessionData.csv"
 export JAVA_OPTS="$JAVA_OPTS -DSSH_USER=sample_user"            # Replace sample_user with actual SSH username
 export JAVA_OPTS="$JAVA_OPTS -DSSH_PASSWORD=sample_password"    # Replace sample_password with actual SSH password
 export JAVA_OPTS="$JAVA_OPTS -DSSH_HOST=sample_ip_address"      # Replace sample_ip_address with actual SSH host IP
+export JAVA_OPTS="$JAVA_OPTS -DSSH_PORT=22"                     # SSH port
 
 # guacd connection info
 export JAVA_OPTS="$JAVA_OPTS -DGUACD_HOST=sample_ip_address"    # Replace sample_ip_address with actual guacd host IP

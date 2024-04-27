@@ -46,9 +46,6 @@ public class WebSocketEndpoint extends Endpoint {
     private static final String NODE_ID_MANAGER;
     private static final String NODE_ID_1;
     private static final String NODE_ID_2;
-    private static final String SSH_USER;
-    private static final String SSH_PASSWORD;
-    private static final String SSH_HOST;
 
     private static final String VNC_PORT_1;
     private static final String VNC_IMAGE_1;
@@ -70,9 +67,6 @@ public class WebSocketEndpoint extends Endpoint {
         NODE_ID_MANAGER = System.getProperty("NODE_ID_MANAGER");
         NODE_ID_1 = System.getProperty("NODE_ID_1");
         NODE_ID_2 = System.getProperty("NODE_ID_2");
-        SSH_USER = System.getProperty("SSH_USER");
-        SSH_PASSWORD = System.getProperty("SSH_PASSWORD");
-        SSH_HOST = System.getProperty("SSH_HOST");
 
         VNC_PORT_1 = System.getProperty("VNC_PORT_1");
         VNC_IMAGE_1 = System.getProperty("VNC_IMAGE_1");
@@ -89,7 +83,7 @@ public class WebSocketEndpoint extends Endpoint {
 
     String sessionID;
 
-    private SSHInterface ssh = new SSHInterface(SSH_HOST, SSH_USER, SSH_PASSWORD);
+    private SSHInterface ssh = new SSHInterface();
 
     private Timer timer;
     @Override
@@ -111,7 +105,7 @@ public class WebSocketEndpoint extends Endpoint {
         session.getUserProperties().put("org.apache.tomcat.websocket.SSL_ENGINE", sslEngine);
 
         sessionID = session.getId();
-        System.out.println(System.getProperty("MAX_OPEN_PORTS"));
+        //System.out.println(System.getProperty("MAX_OPEN_PORTS"));
         CSVManager.init();
         // Register a periodic task to check client activity
         timer = new Timer();
