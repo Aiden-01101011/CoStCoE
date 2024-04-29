@@ -156,10 +156,15 @@ public class WebSocketEndpoint extends Endpoint {
         
                         StringBuilder messageBuilder = new StringBuilder();
                         messageBuilder.append("GO")
+                                      .append("$")
                                       .append(nodeIP)
+                                      .append("$")
                                       .append(port)
+                                      .append("$")
                                       .append(image)
-                                      .append(sessionID);
+                                      .append("$")
+                                      .append(sessionID)
+                                      .append("$");
         
                         session.getBasicRemote().sendText(messageBuilder.toString());
         
