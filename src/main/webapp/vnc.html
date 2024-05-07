@@ -111,7 +111,7 @@
                     guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&IP=${IP}&PORT=${PORT}&IMAGE=${IMAGE}&SID=${SID}`);
                 }
                 if (event.data == "done"){
-                    ws.send(sessionStorage.getItem('image'));
+                    ws.send(sessionStorage.getItem('image')+Math.round(display.clientWidth) + "x" + Math.round(display.clientHeight));
                 }
             };
 

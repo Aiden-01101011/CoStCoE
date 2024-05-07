@@ -115,7 +115,8 @@ public class WebSocketEndpoint extends Endpoint {
             @Override
             public void onMessage(String message) {
                 System.out.println("MESSAGE RECIEVED");
-                int image = Integer.parseInt(message);
+                int image = Integer.parseInt(message.substring(0, 1));
+                String resolution = message.substring(1);
                     if (image < 1 || image > 4) {
                         try {
                             session.close();
@@ -136,7 +137,7 @@ public class WebSocketEndpoint extends Endpoint {
                             session.close();
                             return;
                         }
-                        String response = startContainer(image, port, sessionID);
+                        String response = startContainer(image, port, sessionID, resolution);
                         System.out.println(response);
                         String nodeID = response;
                         String nodeIP;
@@ -203,7 +204,7 @@ public class WebSocketEndpoint extends Endpoint {
         }
     }
 
-    private String startContainer(int image, String port, String sessionID) {
+    private String startContainer(int image, String port, String sessionID, String resolution) {
         String response = null;
         try {
             StringBuilder commandBuilder = new StringBuilder();
@@ -219,6 +220,9 @@ public class WebSocketEndpoint extends Endpoint {
                         .append(",target=")
                         .append(VNC_PORT_1)
                         .append(",mode=host ")
+                        .append("-e RESOLUTION=")
+                        .append(resolution)
+                        .append(" ")
                         .append(VNC_IMAGE_1);
                     response = ssh.execute(commandBuilder.toString());
                     break;
