@@ -98,15 +98,10 @@
                 console.log("Received message: " + event.data);
                 if (event.data.substring(0,2) == "GO"){
                     // Load user data
-                    // let IP = event.data.substring(2,16);
-                    // let PORT = event.data.substring(16,21);
-                    // let IMAGE = event.data.substring(21,22);
-                    // let SID = event.data.substring(22);
-                    let data = event.data.split("$");
-                    let IP = data[1];
-                    let PORT = data[2];
-                    let IMAGE = data[3];
-                    let SID = data[4];
+                    let IP = event.data.substring(2,16);
+                    let PORT = event.data.substring(16,21);
+                    let IMAGE = event.data.substring(21,22);
+                    let SID = event.data.substring(22);
                     // Connect
                     guac.connect(`&GUAC_WIDTH=${GUAC_WIDTH}&GUAC_HEIGHT=${GUAC_HEIGHT}&GUAC_DPI=96&IP=${IP}&PORT=${PORT}&IMAGE=${IMAGE}&SID=${SID}`);
                 }
